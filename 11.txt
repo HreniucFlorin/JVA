@@ -1,0 +1,171 @@
+public class Test {
+    private int old;
+    private String question;
+    private String r1, r2, r3;
+    private boolean a1, a2, a3;
+
+    public Test(int old, String question, String r1, String r2, String r3){
+        this.old=old;
+        this.question=question;
+        this.r1=r1;
+        this.r2=r2;
+        this.r3=r3;
+        this.a1=false;
+        this.a2=false;
+        this.a3=false;
+    }
+
+    public int getOld(){ return old;}
+    public void setOld(int old) { this.old = old; }
+
+    public String getQuestion(){return question;}
+    public void setQuestion(String question){this.question=question;}
+
+    public String getR1() { return r1; }
+    public void setR1(String r1) { this.r1 = r1; }
+
+    public String getR2() { return r2; }
+    public void setR2(String r2) { this.r2 = r2; }
+
+    public String getR3() { return r3; }
+    public void setR3(String r3) { this.r3 = r3; }
+
+    public boolean getA1() { return a1; }
+    public void setA1(boolean a1) { this.a1 = a1; }
+
+    public boolean getA2() { return a2; }
+    public void setA2(boolean a2) { this.a2 = a2; }
+
+    public boolean getA3() { return a3; }
+    public void setA3(boolean a3) { this.a3 = a3; }
+
+    public String toString() {
+        return "Întrebarea: " + question + "\n1) " + r1 + "\n2) " + r2 + "\n3) " + r3;
+    }
+}
+
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Random;
+
+public class HreniucFlorin {
+    public static void main(String[] args) {
+
+        JFrame frame = new JFrame("Autentificare");
+        frame.setSize(400, 250);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(null);
+
+        JLabel lblName = new JLabel("Numele și prenumele, vă rog:");
+        lblName.setBounds(20, 20, 200, 25);
+        frame.add(lblName);
+
+        JTextField txtName = new JTextField();
+        txtName.setBounds(220, 20, 150, 25);
+        frame.add(txtName);
+
+        JLabel lblCode = new JLabel("Cod generat:");
+        lblCode.setBounds(20, 60, 100, 25);
+        frame.add(lblCode);
+
+        JTextField txtGeneratedCode = new JTextField();
+        txtGeneratedCode.setBounds(220, 60, 150, 25);
+        txtGeneratedCode.setEditable(false);
+        frame.add(txtGeneratedCode);
+
+        JLabel lblEnterCode = new JLabel("Introduceți codul:");
+        lblEnterCode.setBounds(20, 100, 150, 25);
+        frame.add(lblEnterCode);
+
+        JTextField txtEnteredCode = new JTextField();
+        txtEnteredCode.setBounds(220, 100, 150, 25);
+        frame.add(txtEnteredCode);
+
+        JButton btnLogin = new JButton("Verifică");
+        btnLogin.setBounds(150, 140, 100, 30);
+        frame.add(btnLogin);
+
+        // Generare cod aleatoriu
+        String generatedCode = generateRandomCode();
+        txtGeneratedCode.setText(generatedCode);
+
+        btnLogin.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String enteredName = txtName.getText();
+                String enteredCode = txtEnteredCode.getText();
+                boolean isCorrectCode = enteredCode.equals(generatedCode);
+
+                openTestWindow(enteredName, isCorrectCode);
+            }
+        });
+
+        frame.setVisible(true);
+    }
+
+    private static String generateRandomCode() {
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        StringBuilder code = new StringBuilder();
+        Random random = new Random();
+        for (int i = 0; i < 5; i++) {
+            code.append(characters.charAt(random.nextInt(characters.length())));
+        }
+        return code.toString();
+    }
+
+    private static void openTestWindow(String userName, boolean isCorrectCode) {
+        JFrame testFrame = new JFrame("Test");
+        testFrame.setSize(400, 250);
+        testFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        testFrame.setLayout(null);
+
+        JLabel lblWelcome = new JLabel("Te-ai logat ca " + userName + ", cu codul " + (isCorrectCode ? "corect" : "greșit"));
+        lblWelcome.setBounds(20, 20, 350, 25);
+        testFrame.add(lblWelcome);
+
+        JLabel lblQuestion = new JLabel();
+        lblQuestion.setBounds(20, 50, 300, 25);
+        testFrame.add(lblQuestion);
+
+        JRadioButton r1 = new JRadioButton("Porto");
+        r1.setBounds(20, 80, 150, 25);
+
+        JRadioButton r2 = new JRadioButton("Lisabona");
+        r2.setBounds(20, 110, 150, 25);
+
+        JRadioButton r3 = new JRadioButton("Madrid");
+        r3.setBounds(20, 140, 150, 25);
+
+        ButtonGroup group = new ButtonGroup();
+        group.add(r1);
+        group.add(r2);
+        group.add(r3);
+
+        JButton btnSubmit = new JButton("Trimite răspuns");
+        btnSubmit.setBounds(200, 140, 150, 30);
+
+        if (isCorrectCode) {
+            lblQuestion.setText("Care este capitala Portugaliei?");
+            testFrame.add(r1);
+            testFrame.add(r2);
+            testFrame.add(r3);
+            testFrame.add(btnSubmit);
+        } else {
+            lblQuestion.setText("Nu ai acces la acest test.");
+        }
+
+        btnSubmit.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (r2.isSelected()) {
+                    JOptionPane.showMessageDialog(testFrame, "Răspuns corect! Capitala Portugaliei este Lisabona.");
+                } else {
+                    JOptionPane.showMessageDialog(testFrame, "Răspuns greșit! Capitala Portugaliei este Lisabona.");
+                }
+            }
+        });
+
+        testFrame.setVisible(true);
+    }
+}
+
