@@ -1,0 +1,141 @@
+public class Student {
+    private String stdNume;
+    private String denDisc1, denDisc2, denDisc3;
+    private int note1, note2, note3;
+
+    public Student(String nume, String disc1, String disc2, String disc3) {
+        this.stdNume = nume;
+        this.denDisc1 = disc1;
+        this.denDisc2 = disc2;
+        this.denDisc3 = disc3;
+        this.note1 = 0;
+        this.note2 = 0;
+        this.note3 = 0;
+    }
+
+    public String getNume() { return stdNume; }
+    public void setNume(String nume) { this.stdNume = nume; }
+
+    public String getDisc1() { return denDisc1; }
+    public void setDisc1(String disc1) { this.denDisc1 = disc1; }
+
+    public String getDisc2() { return denDisc2; }
+    public void setDisc2(String disc2) { this.denDisc2 = disc2; }
+
+    public String getDisc3() { return denDisc3; }
+    public void setDisc3(String disc3) { this.denDisc3 = disc3; }
+
+    public int getNota1() { return note1; }
+    public void setNota1(int nota) { this.note1 = nota; }
+
+    public int getNota2() { return note2; }
+    public void setNota2(int nota) { this.note2 = nota; }
+
+    public int getNota3() { return note3; }
+    public void setNota3(int nota) { this.note3 = nota; }
+
+    @Override
+    public String toString() {
+        return "Student: " + stdNume + "\nDiscipline: " + denDisc1 + ", " + denDisc2 + ", " + denDisc3 +
+               "\nNote: " + note1 + ", " + note2 + ", " + note3;
+    }
+}
+
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class HreniucFlorin {
+    public static void main(String[] args) {
+        // Creăm un obiect Student
+        Student student = new Student("Popescu", "Matematica", "Informatica", "Fizica");
+
+        // Creăm fereastra principală
+        JFrame frame = new JFrame("Student App");
+        frame.setSize(400, 300);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(null);
+
+        // Creăm un ComboBox cu discipline
+        String[] disciplines = {student.getDisc1(), student.getDisc2(), student.getDisc3()};
+        JComboBox<String> comboBox = new JComboBox<>(disciplines);
+        comboBox.setBounds(50, 50, 150, 30);
+        frame.add(comboBox);
+
+        // Caseta de text pentru note
+        JTextField textField = new JTextField();
+        textField.setBounds(50, 100, 150, 30);
+        frame.add(textField);
+
+        // Lista pentru afișarea notelor
+        DefaultListModel<String> listModel = new DefaultListModel<>();
+        JList<String> list = new JList<>(listModel);
+        JScrollPane scrollPane = new JScrollPane(list);
+        scrollPane.setBounds(220, 50, 150, 80);
+        frame.add(scrollPane);
+
+        // Etichetă pentru informațiile studentului
+        JLabel labelInfo = new JLabel("Informații student");
+        labelInfo.setBounds(50, 200, 300, 30);
+        frame.add(labelInfo);
+
+        // Butoane
+        JButton btnShowNotes = new JButton("Afișează note");
+        btnShowNotes.setBounds(50, 150, 150, 30);
+        frame.add(btnShowNotes);
+
+        JButton btnAddNote = new JButton("Adaugă notă");
+        btnAddNote.setBounds(220, 150, 150, 30);
+        frame.add(btnAddNote);
+
+        JButton btnShowInfo = new JButton("Afișează info");
+        btnShowInfo.setBounds(50, 250, 150, 30);
+        frame.add(btnShowInfo);
+
+        // Eveniment pentru afișarea notelor
+        btnShowNotes.addActionListener(e -> {
+            listModel.clear();
+            String selectedDisc = (String) comboBox.getSelectedItem();
+
+            if (selectedDisc.equals(student.getDisc1())) {
+                listModel.addElement("Nota: " + student.getNota1());
+            } else if (selectedDisc.equals(student.getDisc2())) {
+                listModel.addElement("Nota: " + student.getNota2());
+            } else if (selectedDisc.equals(student.getDisc3())) {
+                listModel.addElement("Nota: " + student.getNota3());
+            }
+        });
+
+        // Eveniment pentru adăugarea unei note
+        btnAddNote.addActionListener(e -> {
+            try {
+                int nota = Integer.parseInt(textField.getText());
+                String selectedDisc = (String) comboBox.getSelectedItem();
+
+                if (selectedDisc.equals(student.getDisc1()) && student.getNota1() < 5) {
+                    student.setNota1(nota);
+                } else if (selectedDisc.equals(student.getDisc2()) && student.getNota2() < 5) {
+                    student.setNota2(nota);
+                } else if (selectedDisc.equals(student.getDisc3()) && student.getNota3() < 5) {
+                    student.setNota3(nota);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Studentul a promovat deja disciplina!");
+                }
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(null, "Introduceți un număr valid!");
+            }
+        });
+
+        // Eveniment pentru afișarea informațiilor despre student
+        btnShowInfo.addActionListener(e -> {
+            labelInfo.setText("<html>Student: " + student.getNume() +
+                    "<br>" + student.getDisc1() + ": " + student.getNota1() +
+                    "<br>" + student.getDisc2() + ": " + student.getNota2() +
+                    "<br>" + student.getDisc3() + ": " + student.getNota3() + "</html>");
+        });
+
+        frame.setVisible(true);
+    }
+}
